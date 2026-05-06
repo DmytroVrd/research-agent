@@ -7,7 +7,7 @@ answers in sources, and stores research history.
 > These are snapshots from local runs. Results can vary because the agent queries live web
 > sources and uses free OpenRouter models.
 
-![Research Agent UI](assets/research-agent-ui.png)
+![Research Agent UI](assets/main.png)
 
 ## What To Look For
 
@@ -17,6 +17,8 @@ answers in sources, and stores research history.
 - Each run is persisted and can be loaded again from the session history.
 
 ## Example 1: RAG
+
+![RAG research output](assets/rag.png)
 
 **Question**
 
@@ -46,6 +48,8 @@ Retrieval-Augmented Generation is a framework that enhances large language model
 - [What is Retrieval-Augmented Generation (RAG)? | Google Cloud](https://cloud.google.com/use-cases/retrieval-augmented-generation)
 
 ## Example 2: LangGraph
+
+![LangGraph research output](assets/langgraph.png)
 
 **Question**
 
@@ -78,6 +82,8 @@ LangGraph is a framework for building agentic systems where steps are represente
 - [What is LangGraph? - IBM](https://www.ibm.com/think/topics/langgraph)
 
 ## Example 3: Vector Databases For RAG
+
+![Vector database comparison output](assets/compare-rag.png)
 
 **Question**
 
@@ -139,6 +145,8 @@ Hermes Agent is a self-improving AI agent framework that runs continuously, main
 
 ## Example 5: OpenClaw
 
+![OpenClaw research output](assets/openclaw.png)
+
 **Question**
 
 ```text
@@ -199,6 +207,8 @@ The agent summarized Karpathy's education, OpenAI founding role, Tesla AI leader
 - [Andrej Karpathy Biography](https://www.allamericanspeakers.com/celebritytalentbios/Andrej+Karpathy/453444)
 
 ## Example 7: Sam Altman
+
+![Sam Altman research output](assets/sam-altman.png)
 
 **Question**
 

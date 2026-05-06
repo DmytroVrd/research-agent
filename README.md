@@ -13,10 +13,24 @@ The agent takes a research question, plans focused search queries, retrieves evi
 multiple sources, scrapes selected pages, synthesizes a structured answer, and persists every
 research session for later review.
 
-![AI Research Agent Web UI](docs/assets/research-agent-ui.png)
+![AI Research Agent Web UI](docs/assets/main.png)
 
 See [sample research outputs](docs/SAMPLE_OUTPUTS.md) for concrete examples of generated
 summaries, key findings, sources, and search queries from local demo runs.
+
+## Demo Screenshots
+
+| RAG answer | LangGraph answer |
+| --- | --- |
+| ![RAG research output](docs/assets/rag.png) | ![LangGraph research output](docs/assets/langgraph.png) |
+
+| Vector database comparison | OpenClaw answer |
+| --- | --- |
+| ![Vector database comparison output](docs/assets/compare-rag.png) | ![OpenClaw research output](docs/assets/openclaw.png) |
+
+| Sam Altman answer |
+| --- |
+| ![Sam Altman research output](docs/assets/sam-altman.png) |
 
 ## Why This Project
 
