@@ -1,0 +1,72 @@
+[
+  {
+    "question": "What is Hermes Agent and who created this?",
+    "category": "product_or_project",
+    "expected_behavior": [
+      "Uses web sources rather than arXiv papers.",
+      "Identifies Hermes Agent as an AI agent project.",
+      "Includes source URLs such as GitHub, documentation, or reputable articles.",
+      "Returns clean search queries around Hermes Agent and its creator."
+    ]
+  },
+  {
+    "question": "What is OpenClaw and who created this?",
+    "category": "product_or_project",
+    "expected_behavior": [
+      "Uses web sources rather than arXiv papers.",
+      "Explains what OpenClaw is and who created/developed it.",
+      "Includes structured sources with titles and insights.",
+      "Does not answer from model memory if sources are missing."
+    ]
+  },
+  {
+    "question": "Who is Andrej Karpathy?",
+    "category": "person",
+    "expected_behavior": [
+      "Uses web sources rather than irrelevant arXiv acronym matches.",
+      "Identifies Andrej Karpathy and summarizes his AI/Tesla/OpenAI background.",
+      "Keeps core_entities focused on Andrej Karpathy.",
+      "Returns readable search queries."
+    ]
+  },
+  {
+    "question": "Who is Sam Altman?",
+    "category": "person",
+    "expected_behavior": [
+      "Uses web sources rather than arXiv acronym matches.",
+      "Identifies Sam Altman and summarizes his OpenAI/Y Combinator background.",
+      "Includes source titles and URLs, not bare links.",
+      "Avoids overconfident claims unsupported by sources."
+    ]
+  },
+  {
+    "question": "What is RAG in AI?",
+    "category": "technical_concept",
+    "expected_behavior": [
+      "Explains retrieval-augmented generation in practical terms.",
+      "Mentions retrieval, external knowledge, grounding, and generation.",
+      "Includes structured web sources with titles and insights.",
+      "Returns core_entities focused on RAG."
+    ]
+  },
+  {
+    "question": "What is LangGraph and when should you use it?",
+    "category": "technical_comparison",
+    "expected_behavior": [
+      "Explains LangGraph as a framework for stateful graph-based agent workflows.",
+      "Mentions when it is useful compared with simple chains.",
+      "Includes documentation or reputable technical sources.",
+      "Returns implementation-oriented key findings."
+    ]
+  },
+  {
+    "question": "Compare vector databases for RAG: Pinecone, Weaviate, and Qdrant.",
+    "category": "technical_comparison",
+    "expected_behavior": [
+      "Compares the tools across RAG use cases, hosting, filtering, performance, and developer ergonomics.",
+      "Uses source-grounded claims rather than generic recommendations.",
+      "Includes vendor docs or reputable comparison sources.",
+      "Returns a concise synthesis with actionable tradeoffs."
+    ]
+  }
+]

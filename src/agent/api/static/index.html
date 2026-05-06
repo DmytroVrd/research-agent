@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Research Agent</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23137c72'/%3E%3Cpath d='M18 20h28v6H18zm0 12h28v6H18zm0 12h18v6H18z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">LangGraph research workflow</p>
+          <h1>AI Research Agent</h1>
+        </div>
+        <a class="docs-link" href="/docs">API Docs</a>
+      </header>
+
+      <main class="layout">
+        <section class="workspace" aria-labelledby="research-title">
+          <div class="question-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Ask</p>
+                <h2 id="research-title">Research question</h2>
+              </div>
+              <button class="secondary-button" id="sample-button" type="button">Use sample</button>
+            </div>
+
+            <form id="research-form">
+              <label class="sr-only" for="question-input">Research question</label>
+              <textarea
+                id="question-input"
+                name="question"
+                rows="4"
+                placeholder="Example: Who is Andrej Karpathy?"
+                data-testid="question-input"
+                required
+              ></textarea>
+              <div class="actions-row">
+                <button class="primary-button" id="run-button" type="submit" data-testid="run-button">
+                  Run research
+                </button>
+                <button class="secondary-button" id="clear-button" type="button">Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="status-strip" id="status-strip" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <span id="status-text">Planning search strategy...</span>
+          </div>
+
+          <section class="result-panel" aria-live="polite" aria-labelledby="result-title">
+            <div class="empty-state" id="empty-state">
+              <h2>Ready when you are.</h2>
+              <p>
+                Ask a question and the agent will plan searches, gather sources, synthesize
+                findings, and save the session.
+              </p>
+            </div>
+
+            <div id="result-content" hidden>
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Answer</p>
+                  <h2 id="result-title"></h2>
+                </div>
+                <button class="secondary-button" id="copy-session-button" type="button">
+                  Copy session ID
+                </button>
+              </div>
+
+              <div class="metrics" id="metrics"></div>
+
+              <section class="answer-section">
+                <h3>Summary</h3>
+                <p id="summary-text"></p>
+              </section>
+
+              <section class="answer-section">
+                <h3>Key findings</h3>
+                <ol class="findings-list" id="findings-list"></ol>
+              </section>
+
+              <section class="answer-section">
+                <h3>Sources</h3>
+                <div class="sources-list" id="sources-list"></div>
+              </section>
+
+              <section class="answer-section">
+                <h3>Agent trace</h3>
+                <div class="trace-grid">
+                  <div>
+                    <span class="trace-label">Search queries</span>
+                    <ul id="queries-list"></ul>
+                  </div>
+                  <div>
+                    <span class="trace-label">Core entities</span>
+                    <ul id="entities-list"></ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+
+        <aside class="history-panel" aria-labelledby="history-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Database</p>
+              <h2 id="history-title">Research history</h2>
+            </div>
+            <button class="secondary-button" id="refresh-history-button" type="button">
+              Refresh
+            </button>
+          </div>
+
+          <form class="session-lookup" id="session-lookup-form">
+            <label for="session-id-input">Load by session ID</label>
+            <div class="lookup-row">
+              <input id="session-id-input" type="text" placeholder="Paste session UUID" />
+              <button class="secondary-button" type="submit">Load</button>
+            </div>
+          </form>
+
+          <div class="history-list" id="history-list"></div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
