@@ -15,6 +15,9 @@ research session for later review.
 
 ![AI Research Agent Web UI](docs/assets/research-agent-ui.png)
 
+See [sample research outputs](docs/SAMPLE_OUTPUTS.md) for concrete examples of generated
+summaries, key findings, sources, and search queries from local demo runs.
+
 ## Why This Project
 
 This project is designed as a practical AI/Python portfolio project, not just a single LLM API
