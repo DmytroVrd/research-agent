@@ -107,6 +107,11 @@ def _candidate_sources(state: ResearchState) -> list[dict]:
 
 
 def _extract_json_object(text: str) -> dict:
+    text = text.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE)
+        text = re.sub(r"\s*```$", "", text)
+
     try:
         parsed = json.loads(text)
     except json.JSONDecodeError:
@@ -119,6 +124,26 @@ def _extract_json_object(text: str) -> dict:
         except json.JSONDecodeError:
             return {}
     return parsed if isinstance(parsed, dict) else {}
+
+
+def _extract_json_string_field(text: str, field: str) -> str:
+    match = re.search(rf'"{re.escape(field)}"\s*:\s*"((?:\\.|[^"\\])*)"', text, flags=re.DOTALL)
+    if match:
+        try:
+            return json.loads(f'"{match.group(1)}"').strip()
+        except json.JSONDecodeError:
+            return match.group(1).strip()
+
+    start_match = re.search(rf'"{re.escape(field)}"\s*:\s*"', text, flags=re.DOTALL)
+    if not start_match:
+        return ""
+    value = text[start_match.end() :]
+    value = re.split(r'",\s*"[a-zA-Z_][a-zA-Z0-9_]*"\s*:', value, maxsplit=1)[0]
+    value = value.rstrip('"} \n\t')
+    try:
+        return json.loads(f'"{value}"').strip()
+    except json.JSONDecodeError:
+        return value.replace('\\"', '"').strip()
 
 
 def _extract_string_array_field(text: str, field: str) -> list[str]:
@@ -137,13 +162,21 @@ def _extract_bool_field(text: str, field: str) -> bool | None:
 
 def _parse_synthesis_response(text: str, fallback_sources: list[dict]) -> dict:
     parsed = _extract_json_object(text)
-    summary = parsed.get("summary") if isinstance(parsed.get("summary"), str) else text.strip()
+    summary = parsed.get("summary") if isinstance(parsed.get("summary"), str) else ""
+    if not summary:
+        summary = _extract_json_string_field(text, "summary")
+    if not summary:
+        summary = text.strip()
     key_findings = parsed.get("key_findings")
     cited_sources = parsed.get("cited_sources")
 
     if not isinstance(key_findings, list):
-        key_findings = []
-    key_findings = [finding.strip() for finding in key_findings if isinstance(finding, str)]
+        key_findings = _extract_string_array_field(text, "key_findings")
+    key_findings = [
+        finding.strip(" ,")
+        for finding in key_findings
+        if isinstance(finding, str) and finding.strip(" ,")
+    ]
 
     if not isinstance(cited_sources, list):
         cited_sources = fallback_sources[:6]
@@ -298,6 +331,10 @@ def plan_searches(state: ResearchState) -> ResearchState:
     text = chat_completion(
         [
             {
+                "role": "system",
+                "content": "Return only valid JSON. Do not include analysis, markdown, or commentary.",
+            },
+            {
                 "role": "user",
                 "content": (
                     f"Research question: {state['question']}\n\n"
@@ -316,8 +353,8 @@ def plan_searches(state: ResearchState) -> ResearchState:
                 ),
             }
         ],
-        max_tokens=256,
         temperature=0.1,
+        response_format={"type": "json_object"},
     )
     plan = _parse_search_plan(text, state["question"])
     return {**plan, "session_id": str(uuid.uuid4())}
@@ -403,6 +440,10 @@ def synthesize_node(state: ResearchState) -> ResearchState:
     text = chat_completion(
         [
             {
+                "role": "system",
+                "content": "Return only valid JSON. Do not include analysis, markdown, or commentary.",
+            },
+            {
                 "role": "user",
                 "content": (
                     f"Research question: {state['question']}\n\n"
@@ -421,9 +462,9 @@ def synthesize_node(state: ResearchState) -> ResearchState:
                 ),
             }
         ],
-        max_tokens=1024,
         temperature=0.2,
         session_id=state.get("session_id"),
+        response_format={"type": "json_object"},
     )
     parsed = _parse_synthesis_response(text, candidate_sources)
     return {

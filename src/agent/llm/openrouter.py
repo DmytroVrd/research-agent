@@ -41,10 +41,11 @@ def _content_to_text(content: object) -> str:
 def chat_completion(
     messages: Sequence[dict[str, str]],
     *,
-    max_tokens: int,
+    max_tokens: int | None = None,
     temperature: float = 0.2,
     model: str | None = None,
     session_id: str | None = None,
+    response_format: dict[str, str] | None = None,
 ) -> str:
     settings = get_settings()
     if not settings.openrouter_api_key:
@@ -62,11 +63,14 @@ def chat_completion(
     payload: dict[str, object] = {
         "model": model or settings.openrouter_model,
         "messages": list(messages),
-        "max_tokens": max_tokens,
         "temperature": temperature,
     }
+    if max_tokens is not None:
+        payload["max_tokens"] = max_tokens
     if session_id:
         payload["session_id"] = session_id
+    if response_format:
+        payload["response_format"] = response_format
 
     try:
         with httpx.Client(timeout=60) as client:

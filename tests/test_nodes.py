@@ -294,6 +294,76 @@ def test_synthesize_node_returns_structured_summary():
     assert result["sources"][0]["url"] == "https://arxiv.org/abs/1"
 
 
+def test_synthesize_node_extracts_summary_from_wrapped_json():
+    state = {
+        "question": "Who is Sam Altman?",
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "arxiv_results": [],
+        "web_results": [
+            {
+                "title": "Sam Altman",
+                "snippet": "Sam Altman is CEO of OpenAI.",
+                "url": "https://example.com/sam-altman",
+            }
+        ],
+        "scraped_content": [],
+    }
+    llm_json = """
+    Here is the answer:
+
+    ```json
+    {
+      "key_findings": ["Finding one", ",Finding two"],
+      "summary": "Clean summary text.",
+      "cited_sources": [
+        {
+          "title": "Sam Altman",
+          "url": "https://example.com/sam-altman",
+          "source_type": "web",
+          "insight": "Profile source"
+        }
+      ]
+    }
+    ```
+    """
+
+    with patch("agent.nodes.chat_completion", return_value=llm_json):
+        result = synthesize_node(state)
+
+    assert result["synthesis"] == "Clean summary text."
+    assert result["key_findings"] == ["Finding one", "Finding two"]
+
+
+def test_synthesize_node_extracts_fields_from_truncated_json():
+    state = {
+        "question": "Who is Sam Altman?",
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "arxiv_results": [],
+        "web_results": [
+            {
+                "title": "Sam Altman",
+                "snippet": "Sam Altman is CEO of OpenAI.",
+                "url": "https://example.com/sam-altman",
+            }
+        ],
+        "scraped_content": [],
+    }
+    llm_json = """
+    {
+      "key_findings": [
+        "Finding one",
+        "Finding two"
+      ],
+      "summary": "Clean summary text that was cut off before the JSON object closed
+    """
+
+    with patch("agent.nodes.chat_completion", return_value=llm_json):
+        result = synthesize_node(state)
+
+    assert result["synthesis"] == "Clean summary text that was cut off before the JSON object closed"
+    assert result["key_findings"] == ["Finding one", "Finding two"]
+
+
 def test_synthesize_node_does_not_answer_without_sources():
     state = {
         "question": "Who is Sam Altman?",
